@@ -36,6 +36,7 @@ int handle_args(char *arg, struct program_vars *vars)
 			print_help();
 			exit(0);
 		}
+		goto INVALID_ARG;
 	INVALID_ARG:
 	default:
 		fprintf(stderr, "Invalid option '%s'\n", arg);

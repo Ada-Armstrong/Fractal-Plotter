@@ -9,7 +9,7 @@ struct rgb *convert_to_rgb(uint8_t **data, unsigned int width,
 	struct rgb *pixels = malloc(sizeof(*pixels) * len);
 	if (!pixels)
 		return NULL;
-	for (int i = 0; i < len; ++i) {
+	for (unsigned int i = 0; i < len; ++i) {
 		if ((pixels[i].red = data[i][0]) > depth
 				|| (pixels[i].green = data[i][1]) > depth
 				|| (pixels[i].blue = data[i][2]) > depth) {

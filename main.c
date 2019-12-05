@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include <sys/sysinfo.h>
+#include <pthread.h>
 #include "frame.h"
 #include "ppm.h"
 #include "arg.h"
@@ -40,11 +40,31 @@ double *create_axis(unsigned int len, double min, double max)
 
 	double step = (max - min) / (double)len;
 
-	for (int i = 0; i < len; ++i) {
+	for (unsigned int i = 0; i < len; ++i) {
 		axis[i] = i * step + min;
 	}
 
 	return axis;
+}
+
+void *thread_colour(void *data)
+{
+	struct thread_frame *t_f = data;
+	struct frame *f = t_f->frame;
+
+	unsigned int y = t_f->t_count * (f->height / f->nproc);
+	unsigned int y_end = (t_f->t_count + 1) * (f->height / f->nproc);
+	int iters;
+
+	for (; y < y_end; ++y) {
+		for (unsigned int x = 0; x < f->width; ++x) {
+			iters = num_iterations(f->max_iters,
+					t_f->r_axis[x], t_f->i_axis[y]);
+			set_colour(iters, f->max_iters,
+					f->bitmap[y * f->width + x]);
+		}
+	}
+	return NULL;
 }
 
 int main(int argc, char *argv[])
@@ -59,8 +79,8 @@ int main(int argc, char *argv[])
 	if (vars.file_name == NULL)
 		vars.file_name = "fractal.ppm";
 
-	double r_left = -2;
-	double r_right = 2;
+	double r_left = -2.5;
+	double r_right = 1;
 	// to keep the proper aspect ratio
 	double i_top = (vars.height * (r_right - r_left)) / (2 * vars.width);
 	double i_bottom = -i_top;
@@ -80,17 +100,28 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+
+	pthread_t threads[f->nproc];
+	struct thread_frame *t_frames[f->nproc];
+
 	clock_t time = clock();
 
-	int iters = 0;
-
-	for (int y = 0; y < f->height; ++y) {
-		for (int x = 0; x < f->width; ++x) {
-			iters = num_iterations(f->max_iters,
-					r_axis[x], i_axis[y]);
-			set_colour(iters, f->max_iters,
-					f->bitmap[y * f->width + x]);
+	for (int i = 0; i < f->nproc; ++i) {
+		t_frames[i] = create_thread_frame(f, r_axis, i_axis, i);
+		if (t_frames[i] == NULL) {
+			fprintf(stderr, "Out of memory error\n");
+			return 1;
 		}
+		if (pthread_create(threads + i, NULL,
+				&thread_colour, t_frames[i]) != 0) {
+			fprintf(stderr, "Failed to create thread %d\n", i);
+			return 1;
+		}
+	}
+
+	for (int i = 0; i < f->nproc; ++i) {
+		pthread_join(threads[i], NULL);
+		free(t_frames[i]);
 	}
 
 	time = clock() - time;
@@ -111,4 +142,5 @@ int main(int argc, char *argv[])
 	}
 
 	destroy_frame(f);
+	return 0;
 }
