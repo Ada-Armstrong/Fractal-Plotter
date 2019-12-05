@@ -1,0 +1,8 @@
+# outputed images
+*.ppm
+
+# executable
+cfg
+
+# object files
+*.o
