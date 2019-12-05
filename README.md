@@ -29,8 +29,6 @@ cfp [OPTION]... [FILE]
 	plot a Julia set with c=REAL+IMAGINARYi, note without this option 
 	defaults to plotting the Mandlebrot set
 
-### Build
-
-```
-make
-```
+### Images
+![fractal1](/images/julia-0.285x0.01i.ppm)
+![fractal2](/images/julia-0.3678x0.618i.ppm)
