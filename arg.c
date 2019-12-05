@@ -138,7 +138,7 @@ static int set_single_var(char *arg, unsigned int *var)
 
 static int print_help()
 {
-	FILE *f = fopen("README", "r");
+	FILE *f = fopen(".help", "r");
 	if (!f) {
 		fprintf(stderr, "README missing, you're on your own.\n");
 		return 0;
