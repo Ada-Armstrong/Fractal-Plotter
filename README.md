@@ -30,5 +30,5 @@ cfp [OPTION]... [FILE]
 	defaults to plotting the Mandlebrot set
 
 ### Images
-![fractal1](/images/julia-0.285x0.01i.ppm)
-![fractal2](/images/julia-0.3678x0.618i.ppm)
+![fractal1](/images/julia-0.285x0.01i.ppm?raw=true)
+![fractal2](/images/julia-0.3678x0.618i.ppm?raw=true)
