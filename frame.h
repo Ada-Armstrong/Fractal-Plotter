@@ -12,6 +12,8 @@ struct frame {
 	double i_domain[2];
 	unsigned int max_iters;
 	uint8_t **bitmap;
+	// for julia sets
+	double c[2];
 	// thread vars
 	int nproc;
 	int t_count;
@@ -27,7 +29,7 @@ struct thread_frame {
 struct frame *create_frame(unsigned int width, unsigned int height,
 		double r_left, double r_right,
 		double i_bottom, double i_top,
-		unsigned int max_iters);
+		unsigned int max_iters, double c_r, double c_i);
 
 void destroy_frame(struct frame *f);
 

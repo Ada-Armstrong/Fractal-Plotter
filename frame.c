@@ -3,7 +3,7 @@
 struct frame *create_frame(unsigned int width, unsigned int height,
 		double r_left, double r_right,
 		double i_bottom, double i_top,
-		unsigned int max_iters)
+		unsigned int max_iters, double c_r, double c_i)
 {
 	struct frame *f = malloc(sizeof(*f));
 	if (!f)
@@ -17,6 +17,9 @@ struct frame *create_frame(unsigned int width, unsigned int height,
 
 	f->i_domain[0] = i_bottom;
 	f->i_domain[1] = i_top;
+
+	f->c[0] = c_r;
+	f->c[1] = c_i;
 
 	f->max_iters = max_iters;
 

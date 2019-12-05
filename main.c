@@ -8,10 +8,9 @@
 
 #define PYTHAGOREAN(a, b) ((a * a) + (b * b))
 
-unsigned int num_iterations(unsigned int max_iters, double r, double i)
+unsigned int num_iterations(unsigned int max_iters, double z_r, double z_i,
+		double r, double i)
 {
-	double z_r = 0;
-	double z_i = 0;
 	double tmp;
 
 	unsigned int iters = 0;
@@ -47,7 +46,27 @@ double *create_axis(unsigned int len, double min, double max)
 	return axis;
 }
 
-void *thread_colour(void *data)
+void *thread_mandel(void *data)
+{
+	struct thread_frame *t_f = data;
+	struct frame *f = t_f->frame;
+
+	unsigned int y = t_f->t_count * (f->height / f->nproc);
+	unsigned int y_end = (t_f->t_count + 1) * (f->height / f->nproc);
+	int iters;
+
+	for (; y < y_end; ++y) {
+		for (unsigned int x = 0; x < f->width; ++x) {
+			iters = num_iterations(f->max_iters, 0, 0,
+					t_f->r_axis[x], t_f->i_axis[y]);
+			set_colour(iters, f->max_iters,
+					f->bitmap[y * f->width + x]);
+		}
+	}
+	return NULL;
+}
+
+void *thread_julia(void *data)
 {
 	struct thread_frame *t_f = data;
 	struct frame *f = t_f->frame;
@@ -59,7 +78,8 @@ void *thread_colour(void *data)
 	for (; y < y_end; ++y) {
 		for (unsigned int x = 0; x < f->width; ++x) {
 			iters = num_iterations(f->max_iters,
-					t_f->r_axis[x], t_f->i_axis[y]);
+					t_f->r_axis[x], t_f->i_axis[y],
+					f->c[0], f->c[1]);
 			set_colour(iters, f->max_iters,
 					f->bitmap[y * f->width + x]);
 		}
@@ -69,7 +89,7 @@ void *thread_colour(void *data)
 
 int main(int argc, char *argv[])
 {
-	struct program_vars vars = {800, 800, 50, NULL, 0};
+	struct program_vars vars = {800, 800, 50, -2.5, 1, NULL, 0, 0, 0, 0};
 
 	for (int i = 1; i < argc; ++i) {
 		if (!handle_args(argv[i], &vars))
@@ -79,14 +99,14 @@ int main(int argc, char *argv[])
 	if (vars.file_name == NULL)
 		vars.file_name = "fractal.ppm";
 
-	double r_left = -2.5;
-	double r_right = 1;
 	// to keep the proper aspect ratio
-	double i_top = (vars.height * (r_right - r_left)) / (2 * vars.width);
+	double i_top = (vars.height * (vars.r_right - vars.r_left))
+				/ (2 * vars.width);
 	double i_bottom = -i_top;
 
 	struct frame *f = create_frame(vars.width, vars.height,
-			r_left, r_right, i_top, i_bottom, vars.max_iters);
+			vars.r_left, vars.r_right, i_top, i_bottom,
+			vars.max_iters, vars.c_r, vars.c_i);
 	if (!f) {
 		fprintf(stderr, "Out of memory error\n");
 		return 1;
@@ -100,6 +120,8 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	void *(*thread_colour)(void *) = vars.is_julia ? &thread_julia
+			: &thread_mandel;
 
 	pthread_t threads[f->nproc];
 	struct thread_frame *t_frames[f->nproc];
@@ -113,7 +135,7 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 		if (pthread_create(threads + i, NULL,
-				&thread_colour, t_frames[i]) != 0) {
+				thread_colour, t_frames[i]) != 0) {
 			fprintf(stderr, "Failed to create thread %d\n", i);
 			return 1;
 		}

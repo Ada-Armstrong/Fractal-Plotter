@@ -2,7 +2,7 @@
 *.ppm
 
 # executable
-cfg
+cfp
 
 # object files
 *.o
