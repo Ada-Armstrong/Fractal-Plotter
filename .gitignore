@@ -3,3 +3,6 @@ cfp
 
 # object files
 *.o
+
+# ppm files
+*.ppm
