@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-struct rgb {
+struct rgb_ppm {
 	uint8_t red;
 	uint8_t green;
 	uint8_t blue;
@@ -15,7 +15,7 @@ struct ppm {
 	unsigned int width;
 	unsigned int height;
 	uint8_t depth;
-	struct rgb *data;
+	struct rgb_ppm *data;
 };
 
 /* data has to be an array of length 3 arries. width and height correspond to the 
