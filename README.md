@@ -10,21 +10,21 @@ cfp [OPTION]... [FILE] \
 ### Options
 \
 --help \
-	print this page and exit \
+> print this page and exit
 \
 -t \
-	print the time to plot the fractal to stdin \
+> print the time to plot the fractal to stdin
 \
 -i[NUM] \
-	sets the maximum number of iterations for each point to NUM \
+> sets the maximum number of iterations for each point to NUM
 \
 -d[WIDTH]x[HEIGHT] \
-	change the width and height of the image to WIDTH and HEIGHT \
+> change the width and height of the image to WIDTH and HEIGHT
 \
 -r[LEFT]x[RIGHT] \
-	change the plotting domain for the real line, the domain for the \
-	imaginary line is determined by the aspect ratio and the real domain \
+> change the plotting domain for the real line, the domain for the \
+> imaginary line is determined by the aspect ratio and the real domain \
 \
 -j[REAL]x[IMAGINARY] \
-	plot a Julia set with c=REAL+IMAGINARYi, note without this option \
-	defaults to plotting the Mandlebrot set \
+> plot a Julia set with c=REAL+IMAGINARYi, note without this option
+> defaults to plotting the Mandlebrot set
