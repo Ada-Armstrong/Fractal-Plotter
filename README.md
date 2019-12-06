@@ -3,12 +3,12 @@
 A command line utility to create ppm images of the Mandlebrot set and Julia sets
 
 ## Usage
-'''
+```
 cfp [OPTION]... [FILE]
 	FILE is the file path to save the image, note defaults to fractal.ppm
-'''
+```
 ## Options
-'''
+```
 --help
 	print this page and exit
 
@@ -28,4 +28,4 @@ cfp [OPTION]... [FILE]
 -j[REAL]x[IMAGINARY]
 	plot a Julia set with c=REAL+IMAGINARYi, note without this option
 	defaults to plotting the Mandlebrot set
-'''
+```
