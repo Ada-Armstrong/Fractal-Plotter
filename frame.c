@@ -1,4 +1,5 @@
 #include "frame.h"
+#include <unistd.h>
 
 struct frame *create_frame(unsigned int width, unsigned int height,
 		double r_left, double r_right,
@@ -45,7 +46,7 @@ struct frame *create_frame(unsigned int width, unsigned int height,
 		return NULL;
 	}
 
-	f->nproc = get_nprocs();
+	f->nproc = sysconf(_SC_NPROCESSORS_ONLN);
 
 	return f;
 }

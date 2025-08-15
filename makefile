@@ -1,5 +1,5 @@
 CC= gcc
-CFLAGS= -Wall -Wextra -Werror -pedantic -Ofast
+CFLAGS= -Wall -Wextra -Werror -pedantic
 LIB= -lpthread
 OBJ= main.o arg.o frame.o ppm.o tokenize.o
 NAME= cfp

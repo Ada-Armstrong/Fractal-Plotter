@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <stdint.h>
-#include <sys/sysinfo.h>
 
 struct frame {
 	unsigned int width;

@@ -13,7 +13,7 @@ cfp [OPTION]... [FILE]
 	print this page and exit
 
 -t
-	print the time to plot the fractal to stdin
+	print the time to plot the fractal to stdout
 
 -i[NUM]
 	sets the maximum number of iterations for each point to NUM

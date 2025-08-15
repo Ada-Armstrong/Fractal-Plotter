@@ -1,10 +1,12 @@
 #include "arg.h"
+#include <stdio.h>
+#include <string.h>
 
 static int set_dimensions(char *arg, struct program_vars *vars);
 static int set_range(char *arg, struct program_vars *vars);
 static int set_julia(char *arg, struct program_vars *vars);
 static int set_single_var(char *arg, unsigned int *var);
-static int print_help();
+static int print_help(void);
 static int is_numeric(const char *string);
 
 int handle_args(char *arg, struct program_vars *vars)
@@ -136,7 +138,7 @@ static int set_single_var(char *arg, unsigned int *var)
 	return 1;
 }
 
-static int print_help()
+static int print_help(void)
 {
 	FILE *f = fopen(".help", "r");
 	if (!f) {
@@ -145,18 +147,18 @@ static int print_help()
 	}
 
 	size_t capacity = 0;
-	char *line;
+	char *line = NULL;
 	
-	while (1) {
-		line = NULL;
-		if (getline(&line, &capacity, f) < 0) {
-			free(line);
-			break;
-		}
+	while (getline(&line, &capacity, f) >= 0) {
 		printf("%s", line);
+		free(line);
+		line = NULL;
+	}
+	if (line) {
 		free(line);
 	}
 
+	fclose(f);
 	return 1;
 }
 
