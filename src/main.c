@@ -26,9 +26,9 @@ unsigned int num_iterations(unsigned int max_iters, double z_r, double z_i,
 void set_colour(unsigned int i, unsigned int max_iters, uint8_t pixel[])
 {
 	double t = (double)i / (double)max_iters;
-	pixel[0] = (uint8_t)(9 * (1 - t) * t * t * t * 255);
-	pixel[1] = (uint8_t)(15 * (1 - t) * (1 - t) * t * t * 255);
-	pixel[2] = (uint8_t)(8.5 * (1 - t) * (1 - t) * (1 - t) * t * 255);
+	pixel[0] = (uint8_t)(9.0 * (1.0 - t) * t * t * t * 255.0);
+	pixel[1] = (uint8_t)(15.0 * (1.0 - t) * (1.0 - t) * t * t * 255.0);
+	pixel[2] = (uint8_t)(8.5 * (1.0 - t) * (1.0 - t) * (1.0 - t) * t * 255.0);
 }
 
 double *create_axis(unsigned int len, double min, double max)
@@ -160,7 +160,6 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Failed to save image\n");
 	} else {
 		destroy_ppm(img);
-		fprintf(stdout, "Image saved...\n");
 	}
 
 	destroy_frame(f);
